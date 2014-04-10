@@ -1,0 +1,29 @@
+{
+  "includedFields": [
+    {
+      "fieldName": "url",
+      "fieldType": "string",
+    }
+  ],
+  "streamDef": {
+      "info": "url",
+      "version": 1,
+      "streams": [
+        {
+          "info": "sanitized.csv",
+          "source": "file://data/sanitized.csv",
+           "columns": [
+              "*"
+           ]
+         }
+       ]
+      },
+    "inferenceType": "TemporalAnomaly",
+    "inferenceArgs": {
+      "predictionSteps": [
+        1
+      ],
+      "predictedField": "url"
+    },
+    "swarmSize": "medium"
+}

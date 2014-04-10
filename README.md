@@ -1,21 +1,26 @@
 duke-of-url
 ===========
 
-Predicting next URLs from browsing history using NuPIC
+Predicts next URLs from browsing history using NuPIC.
+
+# Running
+1. Extract the dataset into a file under this repo called data/raw.csv, as described below
+1. Sanitize the data by running`python py/sanitize.py`
+1. Run a swarm over the dataset using data/sanitized.csv as the datafile and search_def.json as the config file
 
 # Dataset
 
 ## Chrome on Mac
 
-Export chrome history into pipe-delimited data file called history.log
+Export chrome history into pipe-delimited data file called raw.csv
 
 ```
-/usr/bin/sqlite3 ~/Library/Application\ Support/Google/Chrome/Default/History > history.log <<EOF
+/usr/bin/sqlite3 ~/Library/Application\ Support/Google/Chrome/Default/History > data/raw.csv <<EOF
 > select * from urls;
 > EOF
 ```
 
-Names of fields in URLs table can be grabbed like this, once in sqlite:
+If you're curious what's in the URL table, try this.
 
 ```
 /usr/bin/sqlite3 ~/Library/Application\ Support/Google/Chrome/Default/History

@@ -12,6 +12,7 @@ scriptDir = os.path.dirname(os.path.realpath(__file__))
 rawFile = scriptDir + "/../data/raw.csv"
 sanitizedFile = scriptDir + "/../data/sanitized.csv"
 tldsFilename = scriptDir + "/../data/effective_tld_names.dat.txt"
+maxPathElements = 6
 
 def main():
     # load tlds, ignore comments and empty lines:
@@ -29,9 +30,9 @@ def main():
   outFile.close()
 
 def appendHeader(writer):
-  writer.writerow(["tld","hostname","port","subdomain","path1","path2","path3","path4","path5"])
-  writer.writerow(["string","string","string","string","string","string","string","string","string"])
-  writer.writerow(["","","","","","","","",""])
+  writer.writerow(["tld","hostname","port","subdomain","path1","path2","path3","path4","path5","path6"])
+  writer.writerow(["string","string","string","string","string","string","string","string","string","string"])
+  writer.writerow(["","","","","","","","","",""])
 
 # Takes a line of raw input and produces an array of fields
 def processLine(line, tlds):
@@ -39,11 +40,12 @@ def processLine(line, tlds):
   url = rawFields[1]
   parseResult = urlparse(url)
   domainParts = parseHostname(parseResult.netloc, tlds)
-  # Take first 5 path elements
-  pathElements = parseUrlPath(parseResult.path)[:5]
-  # Pad the array if less than 5 elements
-  if len(pathElements) < 5: 
-    while len(pathElements) < 5:
+
+  # Take first maxPathElements path elements
+  pathElements = parseUrlPath(parseResult.path)[:maxPathElements]
+  # Pad the array if less than maxPathElements
+  if len(pathElements) < maxPathElements: 
+    while len(pathElements) < maxPathElements:
       pathElements.append("")
   subdomains = ""
   if domainParts.subdomains != None:
@@ -84,19 +86,20 @@ class DomainParts(object):
       if len(domain_parts) > 1:
         self.subdomains = domain_parts[:-1]
 
+
 def parseHostname(networkAddress, tlds):
   # Split out the port number
   portSplit = networkAddress.split(':')
   noPort = portSplit[0]
   port = "80" if len(portSplit) == 1 else portSplit[1]
   # Although convenient, this test for a valid IP takes waaay too long. Come up with something more efficient.
-  try:
-    socket.inet_aton(noPort)
-    # is a valid IP.
-    return DomainParts([networkAddress], port, "")
-  except socket.error:
-    # Not an IP, so continue.
-    pass
+  # try:
+  #   socket.inet_aton(noPort)
+  #   # is a valid IP.
+  #   return DomainParts([noPort], port, "")
+  # except socket.error:
+  #   # Not an IP, so continue.
+  #   pass
 
 
   urlElements = noPort.split('.')
@@ -123,7 +126,14 @@ def parseHostname(networkAddress, tlds):
 
   #print networkAddress
   #raise ValueError("Domain not in global list of TLDs")
-  return DomainParts(urlElements, port, "")
+  return DomainParts([noPort], port, "")
+  # try:
+  #   socket.inet_aton(noPort)
+  #   # is a valid IP.
+  #   return DomainParts([noPort], port, "")
+  # except socket.error:
+  #   # Not an IP, so continue.
+  #   return DomainParts(urlElements, port, "")
 
 
 if __name__ == "__main__":
