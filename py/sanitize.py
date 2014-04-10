@@ -1,15 +1,17 @@
 from __future__ import with_statement
 import csv
 import re
+import os
 from urlparse import urlparse
 import socket
 
 ## Figure out how to take Command-Line Arguments
 
 # Pipe-delimited
-rawFile = "raw.csv"
-sanitizedFile = "sanitized.csv"
-tldsFilename = "../effective_tld_names.dat.txt"
+scriptDir = os.path.dirname(os.path.realpath(__file__))
+rawFile = scriptDir + "/../data/raw.csv"
+sanitizedFile = scriptDir + "/../data/sanitized.csv"
+tldsFilename = scriptDir + "/../data/effective_tld_names.dat.txt"
 
 def main():
     # load tlds, ignore comments and empty lines:
@@ -27,9 +29,9 @@ def main():
   outFile.close()
 
 def appendHeader(writer):
-  writer.writerow(["tld","hostname","subdomain","path1","path2","path3","path4","path5"])
-  writer.writerow(["string","string","string","string","string","string","string","string"])
-  writer.writerow(["","","","","","","",""])
+  writer.writerow(["tld","hostname","port","subdomain","path1","path2","path3","path4","path5"])
+  writer.writerow(["string","string","string","string","string","string","string","string","string"])
+  writer.writerow(["","","","","","","","",""])
 
 # Takes a line of raw input and produces an array of fields
 def processLine(line, tlds):
@@ -43,8 +45,10 @@ def processLine(line, tlds):
   if len(pathElements) < 5: 
     while len(pathElements) < 5:
       pathElements.append("")
-  # subdomains = ".".join(domainParts.subdomains)
-  ret = [domainParts.tld, domainParts.domain, domainParts.subdomains]
+  subdomains = ""
+  if domainParts.subdomains != None:
+    subdomains = ".".join(domainParts.subdomains)
+  ret = [domainParts.tld, domainParts.domain, domainParts.port, subdomains]
   ret.extend(pathElements)
   return ret
 
@@ -70,27 +74,32 @@ def parseUrlPath(urlPath):
 
 # Taken from: http://stackoverflow.com/a/6926141
 class DomainParts(object):
-  def __init__(self, domain_parts, tld):
+  def __init__(self, domain_parts, port, tld):
     self.domain = None
     self.subdomains = None
     self.tld = tld
+    self.port = port
     if domain_parts:
       self.domain = domain_parts[-1]
       if len(domain_parts) > 1:
         self.subdomains = domain_parts[:-1]
 
 def parseHostname(networkAddress, tlds):
+  # Split out the port number
+  portSplit = networkAddress.split(':')
+  noPort = portSplit[0]
+  port = "80" if len(portSplit) == 1 else portSplit[1]
   # Although convenient, this test for a valid IP takes waaay too long. Come up with something more efficient.
   try:
-    socket.inet_aton(networkAddress)
+    socket.inet_aton(noPort)
     # is a valid IP.
-    return DomainParts([networkAddress], "")
+    return DomainParts([networkAddress], port, "")
   except socket.error:
     # Not an IP, so continue.
     pass
 
 
-  urlElements = networkAddress.split('.')
+  urlElements = noPort.split('.')
 
   # urlElements = ["abcde","co","uk"]
   for i in range(-len(urlElements),0):
@@ -105,14 +114,16 @@ def parseHostname(networkAddress, tlds):
 
     # match tlds: 
     if (exceptionCandidate in tlds):
-      return ".".join(urlElements[i:]) 
+      tld = ".".join(urlElements[i:])
+      return tld 
     if (candidate in tlds or wildcardCandidate in tlds):
-      return DomainParts(urlElements[:i], '.'.join(urlElements[i:]))
+      tld = '.'.join(urlElements[i:])
+      return DomainParts(urlElements[:i], port, tld)
       # returns ["abcde"]
 
   #print networkAddress
   #raise ValueError("Domain not in global list of TLDs")
-  return DomainParts(urlElements, "")
+  return DomainParts(urlElements, port, "")
 
 
 if __name__ == "__main__":
