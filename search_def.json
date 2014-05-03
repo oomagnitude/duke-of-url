@@ -7,42 +7,6 @@
     {
       "fieldName": "hostname",
       "fieldType": "string"
-    },
-    {
-      "fieldName": "port",
-      "fieldType": "string"
-    },
-    {
-      "fieldName": "subdomain",
-      "fieldType": "string"
-    },
-    {
-      "fieldName": "path1",
-      "fieldType": "string"
-    },
-    {
-      "fieldName": "path2",
-      "fieldType": "string"
-    },
-    {
-      "fieldName": "path3",
-      "fieldType": "string"
-    },
-    {
-      "fieldName": "path4",
-      "fieldType": "string"
-    },
-    {
-      "fieldName": "path5",
-      "fieldType": "string"
-    },
-    {
-      "fieldName": "path6",
-      "fieldType": "string"
-    },
-    {
-      "fieldName": "url",
-      "fieldType": "string"
     }
   ],
   "streamDef": {
@@ -61,9 +25,9 @@
     "inferenceType": "MultiStep",
     "inferenceArgs": {
       "predictionSteps": [
-        1, 3
+        1
       ],
-      "predictedField": "url"
+      "predictedField": "hostname"
     },
     "swarmSize": "medium"
 }

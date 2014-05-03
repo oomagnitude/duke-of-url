@@ -30,9 +30,9 @@ def main():
   outFile.close()
 
 def appendHeader(writer):
-  writer.writerow(["tld","hostname","port","subdomain","path1","path2","path3","path4","path5","path6","url"])
-  writer.writerow(["string","string","string","string","string","string","string","string","string","string","string"])
-  writer.writerow(["","","","","","","","","","",""])
+  writer.writerow(["tld","hostname","port","subdomain","path1","path2","path3","path4","path5","path6"])
+  writer.writerow(["string","string","string","string","string","string","string","string","string","string"])
+  writer.writerow(["","","","","","","","","",""])
 
 # Takes a line of raw input and produces an array of fields
 def processLine(line, tlds):
@@ -52,12 +52,13 @@ def processLine(line, tlds):
     subdomains = ".".join(domainParts.subdomains)
   ret = [domainParts.tld, domainParts.domain, domainParts.port, subdomains]
   ret.extend(pathElements)
-  ret.append(url)
+  # ret.append(url)
   return ret
 
 # Turns URL path into an array of path elements. Takes care of leading and trailing slashes.
 def parseUrlPath(urlPath):
-  return urlPath.strip("/").split("/")
+  commaSafeUrlPath = re.sub(",", "", urlPath)
+  return commaSafeUrlPath.strip("/").split("/")
 
 # Turns full network address into subdomain section plus hostname:port section.
 # Returns dictionary with keys subdomain and hostname
