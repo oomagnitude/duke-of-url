@@ -16,8 +16,8 @@ import datetime
 
 scriptDir = os.path.dirname(os.path.realpath(__file__))
 _LOGGER = logging.getLogger(__name__)
-_DATA_PATH = scriptDir + "/../data/sanitized.csv"
-_MODEL_PATH = scriptDir + "/../savedModel/test_checkpoint/"
+_DATA_PATH = os.path.join(scriptDir, "..", "data", "sanitized.csv")
+_MODEL_PATH = os.path.join(scriptDir, "..", "savedModel", "checkpoint")
 model = ModelFactory.loadFromCheckpoint(_MODEL_PATH)
 
 tlds = loadTlds()
@@ -48,8 +48,10 @@ def processOneUrl(url):
         path5=urlFields[8],
         path6=urlFields[9])
       result = model.run(modelInput)
-      inference = result.inferences['multiStepBestPredictions'][1]
-      print(inference)
+      nextUrl = result.inferences['multiStepBestPredictions'][1]
+      thirdUrl = result.inferences['multiStepBestPredictions'][3]
+      print("next: " + nextUrl)
+      print("third: " + thirdUrl)
 
 def runUrlPrediction():
   model.enableInference({'predictedField': 'hostname'})

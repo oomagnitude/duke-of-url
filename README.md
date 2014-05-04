@@ -6,10 +6,10 @@ Predicts next URLs from browsing history using NuPIC.
 # Running
 1. Extract the dataset into a file under this repo called data/raw.csv, as described below
 1. Sanitize the data by running`python py/sanitize.py`
-1. If your dataset is large, truncate the file to speed up swarming `cat sanitized.csv | head -500 > truncated.csv`
-1. If you did the step above, then change the `search_def.json` file to point to truncated.csv
+1. If your dataset is large, truncate the file to speed up swarming `cat sanitized.csv | head -500 > swarm.csv`
+1. If you did the step above, then change the `search_def.json` file to point to swarm.csv
 1. Run a swarm over the dataset `$NUPIC/bin/run_swarm.py --overwrite search_def.json`
-1. Update model params to point back to sanitized.csv instead of truncated.csv
+1. Update `description.py` to point back to sanitized.csv instead of swarm.csv
 1. Train the model by running `python py/train.py`
 1. Run the interactive shell by running `python py/url_predictor.py`
 

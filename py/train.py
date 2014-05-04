@@ -20,16 +20,14 @@ def train():
 
   with open (findDataset(_DATA_PATH)) as fin:
     reader = csv.reader(fin)
-    # csvWriter = csv.writer(open(_OUTPUT_PATH,"wb"))
-    # csvWriter.writerow(["timestamp", "consumption", "anomaly_score"])
     headers = reader.next()
     reader.next()
     reader.next()
     for i, record in enumerate(reader, start=1):
       modelInput = dict(zip(headers, record))
-      result = model.run(modelInput)
+      model.run(modelInput)
 
-    model.save(os.path.join(_OUTPUT_PATH, "test_checkpoint"))
+    model.save(os.path.join(_OUTPUT_PATH, "checkpoint"))
 
 
 if __name__ == "__main__":

@@ -29,7 +29,7 @@
     "inferenceType": "MultiStep",
     "inferenceArgs": {
       "predictionSteps": [
-        1
+        1, 3
       ],
       "predictedField": "hostname"
     },
