@@ -51,7 +51,7 @@ def processLine(line, tlds):
   subdomains = ""
   if domainParts.subdomains != None:
     subdomains = ".".join(domainParts.subdomains)
-  ret = [timestamp, domainParts.tld, domainParts.domain, domainParts.port, subdomains]
+  ret = [formattedTimestamp, domainParts.tld, domainParts.domain, domainParts.port, subdomains]
   ret.extend(pathElements)
   # ret.append(url)
   return ret
