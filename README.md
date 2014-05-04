@@ -16,8 +16,11 @@ Export chrome history into pipe-delimited data file called raw.csv
 
 ```
 /usr/bin/sqlite3 ~/Library/Application\ Support/Google/Chrome/Default/History > data/raw.csv <<EOF
-> select * from urls;
-> EOF
+SELECT replace(urls.url, '|', 'b'), urls.visit_count, urls.typed_count, datetime((urls.last_visit_time/1000000)-11644473600, 'unixepoch', 'localtime'), urls.hidden, datetime((visits.visit_time/1000000)-11644473600, 'unixepoch', 'localtime') as visittime, visits.from_visit, visits.transition
+FROM urls, visits
+WHERE urls.id = visits.url
+order by visittime asc;
+EOF
 ```
 
 If you're curious what's in the URL table, try this.
