@@ -11,7 +11,7 @@ from nupic.frameworks.opf.predictionmetricsmanager import MetricsManager
 from urls import loadTlds
 from urls import parseUrl
 import datetime
-
+import texttable
 
 
 scriptDir = os.path.dirname(os.path.realpath(__file__))
@@ -48,15 +48,29 @@ def processOneUrl(url):
         path5=urlFields[8],
         path6=urlFields[9])
       result = model.run(modelInput)
-      nextUrl = result.inferences['multiStepBestPredictions'][1]
-      thirdUrl = result.inferences['multiStepBestPredictions'][3]
-      print("next: " + nextUrl)
-      print("third: " + thirdUrl)
+      table = texttable.Texttable()
+      oneStepPredictions = result.inferences['multiStepPredictions'][1]
+      threeStepPredictions = result.inferences['multiStepPredictions'][3]
+      printTopNPredictions(oneStepPredictions, "next", table, 3)
+      printTopNPredictions(threeStepPredictions, "third", table, 3)
+      print table.draw()
 
 def runUrlPrediction():
   model.enableInference({'predictedField': 'hostname'})
   cmdPrompt = UrlShell()
   cmdPrompt.cmdloop()
+
+def printTopNPredictions(predictions, step, table, n):
+  row = [step]
+  invPredictions = {v:k for k, v in predictions.items()}
+  i = 1
+  for key in sorted(invPredictions, reverse=True):
+    if(i > n):
+      break
+    i += 1
+    pct = "%.2f" % (key * 100)
+    row.append(invPredictions[key] + " (" + pct + "%)")
+  table.add_row(row)
 
 if __name__ == "__main__":
   logging.basicConfig(level=logging.INFO)

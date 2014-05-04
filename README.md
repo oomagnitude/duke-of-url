@@ -1,5 +1,10 @@
 duke-of-url
 ===========
+# Prerequisites
+
+texttable:
+https://pypi.python.org/pypi?name=texttable&%3aaction=display
+http://foutaise.org/code/
 
 Predicts next URLs from browsing history using NuPIC.
 

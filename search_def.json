@@ -9,6 +9,10 @@
       "fieldType": "string"
     },
     {
+      "fieldName": "subdomain",
+      "fieldType": "string"
+    },
+    {
       "fieldName": "hostname",
       "fieldType": "string"
     }

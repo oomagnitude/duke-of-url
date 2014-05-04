@@ -18,7 +18,11 @@ model = ModelFactory.create(model_params.MODEL_PARAMS)
 def train():
   model.enableInference({'predictedField': 'hostname'})
 
+  i = 0
   with open (findDataset(_DATA_PATH)) as fin:
+    i += 1
+    if (i%500 == 0):
+      print("did "+ i + " records")
     reader = csv.reader(fin)
     headers = reader.next()
     reader.next()
