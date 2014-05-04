@@ -19,6 +19,7 @@ _LOGGER = logging.getLogger(__name__)
 _DATA_PATH = os.path.join(scriptDir, "..", "data", "sanitized.csv")
 _MODEL_PATH = os.path.join(scriptDir, "..", "savedModel", "checkpoint")
 model = ModelFactory.loadFromCheckpoint(_MODEL_PATH)
+model.disableLearning()
 
 tlds = loadTlds()
 
