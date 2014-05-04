@@ -4,7 +4,7 @@ import re
 import os
 from urlparse import urlparse
 import socket
-
+import time
 ## Figure out how to take Command-Line Arguments
 
 # Pipe-delimited
@@ -30,14 +30,15 @@ def main():
   outFile.close()
 
 def appendHeader(writer):
-  writer.writerow(["tld","hostname","port","subdomain","path1","path2","path3","path4","path5","path6"])
-  writer.writerow(["string","string","string","string","string","string","string","string","string","string"])
-  writer.writerow(["","","","","","","","","",""])
+  writer.writerow(["timestamp","tld","hostname","port","subdomain","path1","path2","path3","path4","path5","path6"])
+  writer.writerow(["datetime","string","string","string","string","string","string","string","string","string","string"])
+  writer.writerow(["","","","","","","","","","",""])
 
 # Takes a line of raw input and produces an array of fields
 def processLine(line, tlds):
   rawFields = line.split("|")
-  url = rawFields[1]
+  url = rawFields[0]
+  timestamp = rawFields[5]
   parseResult = urlparse(url)
   domainParts = parseHostname(parseResult.netloc, tlds)
 
@@ -50,7 +51,7 @@ def processLine(line, tlds):
   subdomains = ""
   if domainParts.subdomains != None:
     subdomains = ".".join(domainParts.subdomains)
-  ret = [domainParts.tld, domainParts.domain, domainParts.port, subdomains]
+  ret = [timestamp, domainParts.tld, domainParts.domain, domainParts.port, subdomains]
   ret.extend(pathElements)
   # ret.append(url)
   return ret

@@ -1,6 +1,10 @@
 {
   "includedFields": [
     {
+      "fieldName": "timestamp",
+      "fieldType": "datetime"
+    },
+    {
       "fieldName": "tld",
       "fieldType": "string"
     },
@@ -14,8 +18,8 @@
       "version": 1,
       "streams": [
         {
-          "info": "sanitized.csv",
-          "source": "file://data/sanitized.csv",
+          "info": "swarm.csv",
+          "source": "file://data/swarm.csv",
            "columns": [
               "*"
            ]
