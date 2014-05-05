@@ -18,18 +18,20 @@ model = ModelFactory.create(model_params.MODEL_PARAMS)
 def train():
   model.enableInference({'predictedField': 'hostname'})
 
-  i = 0
   with open (findDataset(_DATA_PATH)) as fin:
-    i += 1
-    if (i%500 == 0):
-      print("did "+ i + " records")
     reader = csv.reader(fin)
     headers = reader.next()
+    # Skip header lines
     reader.next()
     reader.next()
+
+    i = 0
     for i, record in enumerate(reader, start=1):
       modelInput = dict(zip(headers, record))
       model.run(modelInput)
+      i += 1
+      if (i%500 == 0):
+        print("ran "+ str(i) + " steps")
 
     model.save(os.path.join(_OUTPUT_PATH, "checkpoint"))
 
