@@ -323,8 +323,8 @@ control = {
   #
   'dataset' : {   u'info': u'url',
         u'streams': [   {   u'columns': [u'*'],
-                            u'info': u'sanitized.csv',
-                            u'source': u'file://data/sanitized.csv'}],
+                            u'info': u'swarm.csv',
+                            u'source': u'file://data/swarm.csv'}],
         u'version': 1},
 
   # Iteration count: maximum number of iterations.  Each iteration corresponds
