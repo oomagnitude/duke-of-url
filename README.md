@@ -1,12 +1,12 @@
 duke-of-url
 ===========
+Predicts next URLs from browsing history using NuPIC.
+
 # Prerequisites
 
 [texttable py module](https://pypi.python.org/pypi?name=texttable&%3aaction=display)
 
 [texttable home](http://foutaise.org/code/)
-
-Predicts next URLs from browsing history using NuPIC.
 
 # Running
 1. Extract the dataset into a file under this repo called data/raw.csv, as described below
